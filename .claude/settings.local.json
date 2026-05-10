@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pip install *)",
+      "Bash(pip3 install *)",
+      "Bash(python3 -c \"from PIL import Image; print\\('pillow ok'\\)\")",
+      "Bash(xargs -I{} basename {})",
+      "Bash(python3 *)",
+      "Bash(ssh -o StrictHostKeyChecking=no -o ServerAliveInterval=10 -R 80:localhost:8899 serveo.net)",
+      "Bash(echo \"PID túnel: $!\")",
+      "Read(//tmp/**)",
+      "Bash(echo \"PID: $!\")",
+      "Bash(curl -s http://localhost:3000/status)"
+    ]
+  }
+}

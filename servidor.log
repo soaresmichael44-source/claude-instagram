@@ -1,0 +1,217 @@
+/Users/michaelsoares/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+[2026-05-09 16:31:58] Servidor rodando em http://localhost:3000
+[2026-05-09 16:31:58] Servidor rodando em http://localhost:3000
+[2026-05-09 16:31:58]   POST /publicar  → dispara pipeline completo
+[2026-05-09 16:31:58]   POST /publicar  → dispara pipeline completo
+[2026-05-09 16:31:58]   GET  /status    → verifica se está online
+[2026-05-09 16:31:58]   GET  /status    → verifica se está online
+[2026-05-09 16:31:58]   Log: /Users/michaelsoares/claude-instagram/servidor.log
+[2026-05-09 16:31:58]   Log: /Users/michaelsoares/claude-instagram/servidor.log
+[2026-05-09 16:32:00] 127.0.0.1 - "GET /status HTTP/1.1" 200 -
+[2026-05-09 16:32:00] 127.0.0.1 - "GET /status HTTP/1.1" 200 -
+[2026-05-09 16:37:45] 127.0.0.1 - "GET /nada HTTP/1.1" 404 -
+[2026-05-09 16:37:45] 127.0.0.1 - "GET /nada HTTP/1.1" 404 -
+[2026-05-09 16:45:14] Servidor rodando em http://localhost:3000
+[2026-05-09 16:45:14]   POST /publicar  → dispara pipeline completo
+[2026-05-09 16:45:14]   GET  /status    → verifica se está online
+[2026-05-09 16:45:14]   Log: /Users/michaelsoares/claude-instagram/servidor.log
+[2026-05-09 16:45:18] 127.0.0.1 - "GET /status HTTP/1.1" 200 -
+/Users/michaelsoares/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+[2026-05-09 17:05:26] Servidor rodando em http://localhost:3000
+[2026-05-09 17:05:26] Servidor rodando em http://localhost:3000
+[2026-05-09 17:05:26]   POST /publicar  → dispara pipeline completo
+[2026-05-09 17:05:26]   POST /publicar  → dispara pipeline completo
+[2026-05-09 17:05:26]   GET  /status    → verifica se está online
+[2026-05-09 17:05:26]   GET  /status    → verifica se está online
+[2026-05-09 17:05:26]   Log: /Users/michaelsoares/claude-instagram/servidor.log
+[2026-05-09 17:05:26]   Log: /Users/michaelsoares/claude-instagram/servidor.log
+[2026-05-09 17:05:30] 127.0.0.1 - "GET /status HTTP/1.1" 200 -
+[2026-05-09 17:05:30] 127.0.0.1 - "GET /status HTTP/1.1" 200 -
+[2026-05-10 01:15:32] === Iniciando pipeline de publicação ===
+[2026-05-10 01:15:32] === Iniciando pipeline de publicação ===
+[2026-05-10 01:15:32] Gerando imagens com Pillow...
+[2026-05-10 01:15:32] Gerando imagens com Pillow...
+[2026-05-10 01:15:32] Imagens geradas: Salvo: /Users/michaelsoares/claude-instagram/slides/01_capa.jpg
+  Salvo: /Users/michaelsoares/claude-instagram/slides/02_oque_e.jpg
+  Salvo: /Users/michaelsoares/claude-instagram/slides/03_como_funciona.jpg
+  Salvo: /Users/michaelsoares/claude-instagram/slides/04_vantagens.jpg
+  Salvo: /Users/michaelsoares/claude-instagram/slides/05_cta.jpg
+
+Total: 5 slides em /Users/michaelsoares/claude-instagram/slides
+[2026-05-10 01:15:32] Imagens geradas: Salvo: /Users/michaelsoares/claude-instagram/slides/01_capa.jpg
+  Salvo: /Users/michaelsoares/claude-instagram/slides/02_oque_e.jpg
+  Salvo: /Users/michaelsoares/claude-instagram/slides/03_como_funciona.jpg
+  Salvo: /Users/michaelsoares/claude-instagram/slides/04_vantagens.jpg
+  Salvo: /Users/michaelsoares/claude-instagram/slides/05_cta.jpg
+
+Total: 5 slides em /Users/michaelsoares/claude-instagram/slides
+[2026-05-10 01:15:32] Iniciando servidor de slides na porta 8901...
+[2026-05-10 01:15:32] Iniciando servidor de slides na porta 8901...
+[2026-05-10 01:15:33] Abrindo túnel SSH via serveo.net...
+[2026-05-10 01:15:33] Abrindo túnel SSH via serveo.net...
+[2026-05-10 01:15:36] Túnel ativo: https://b2fff106160bb638-189-91-93-166.serveousercontent.com
+[2026-05-10 01:15:36] Túnel ativo: https://b2fff106160bb638-189-91-93-166.serveousercontent.com
+[2026-05-10 01:15:36] URLs: ['https://b2fff106160bb638-189-91-93-166.serveousercontent.com/01_capa.jpg', 'https://b2fff106160bb638-189-91-93-166.serveousercontent.com/02_oque_e.jpg', 'https://b2fff106160bb638-189-91-93-166.serveousercontent.com/03_como_funciona.jpg', 'https://b2fff106160bb638-189-91-93-166.serveousercontent.com/04_vantagens.jpg', 'https://b2fff106160bb638-189-91-93-166.serveousercontent.com/05_cta.jpg']
+[2026-05-10 01:15:36] URLs: ['https://b2fff106160bb638-189-91-93-166.serveousercontent.com/01_capa.jpg', 'https://b2fff106160bb638-189-91-93-166.serveousercontent.com/02_oque_e.jpg', 'https://b2fff106160bb638-189-91-93-166.serveousercontent.com/03_como_funciona.jpg', 'https://b2fff106160bb638-189-91-93-166.serveousercontent.com/04_vantagens.jpg', 'https://b2fff106160bb638-189-91-93-166.serveousercontent.com/05_cta.jpg']
+[2026-05-10 01:15:36] Criando containers de imagem...
+[2026-05-10 01:15:36] Criando containers de imagem...
+[2026-05-10 01:15:43] Servidor de slides encerrado.
+[2026-05-10 01:15:43] Servidor de slides encerrado.
+[2026-05-10 01:15:43] Túnel SSH encerrado.
+[2026-05-10 01:15:43] Túnel SSH encerrado.
+[2026-05-10 01:15:43] ERRO: 400 Client Error: Bad Request for url: https://graph.facebook.com/v19.0/17841443292887818/media?image_url=https%3A%2F%2Fb2fff106160bb638-189-91-93-166.serveousercontent.com%2F01_capa.jpg&is_carousel_item=true&access_token=EAAUnZAhHd9QABRbIRZBtVU8wgJmzjNN1wLkVzBhNHslldq1U9sGWsLSZA7rJUrCHRpvvpucij8ELBgLZBdZBQkOx1sAsfwt4yFkle46im4M7jhbqRCsfRwyMhZBsq4kR5ZA7GX7lWKZAqhYInAWK7D3SHQv5hb8wkskwQBZB3oCf9Q43e3QA3m1BEPiwQ9ylja3ZCXT4hkotFB
+[2026-05-10 01:15:43] ERRO: 400 Client Error: Bad Request for url: https://graph.facebook.com/v19.0/17841443292887818/media?image_url=https%3A%2F%2Fb2fff106160bb638-189-91-93-166.serveousercontent.com%2F01_capa.jpg&is_carousel_item=true&access_token=EAAUnZAhHd9QABRbIRZBtVU8wgJmzjNN1wLkVzBhNHslldq1U9sGWsLSZA7rJUrCHRpvvpucij8ELBgLZBdZBQkOx1sAsfwt4yFkle46im4M7jhbqRCsfRwyMhZBsq4kR5ZA7GX7lWKZAqhYInAWK7D3SHQv5hb8wkskwQBZB3oCf9Q43e3QA3m1BEPiwQ9ylja3ZCXT4hkotFB
+[2026-05-10 01:15:43] 127.0.0.1 - "POST /publicar HTTP/1.1" 500 -
+[2026-05-10 01:15:43] 127.0.0.1 - "POST /publicar HTTP/1.1" 500 -
+/Users/michaelsoares/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+[2026-05-10 01:23:10] Servidor em http://localhost:3000  |  POST /publicar  |  GET /status
+[2026-05-10 01:23:10] Servidor em http://localhost:3000  |  POST /publicar  |  GET /status
+[2026-05-10 01:23:12] 127.0.0.1 "GET /status HTTP/1.1" 200 -
+[2026-05-10 01:23:12] 127.0.0.1 "GET /status HTTP/1.1" 200 -
+[2026-05-10 01:24:15] === POST /publicar ===
+[2026-05-10 01:24:15] === POST /publicar ===
+[2026-05-10 01:24:15] Gerando slides...
+[2026-05-10 01:24:15] Gerando slides...
+[2026-05-10 01:24:15] Slides gerados.
+[2026-05-10 01:24:15] Slides gerados.
+[2026-05-10 01:24:15]   Enviando 01_capa.jpg → catbox.moe
+[2026-05-10 01:24:15]   Enviando 01_capa.jpg → catbox.moe
+[2026-05-10 01:24:17] ERRO: 412 Client Error: Precondition Failed for url: https://catbox.moe/user/api.php
+[2026-05-10 01:24:17] ERRO: 412 Client Error: Precondition Failed for url: https://catbox.moe/user/api.php
+[2026-05-10 01:24:17] 127.0.0.1 "POST /publicar HTTP/1.1" 500 -
+[2026-05-10 01:24:17] 127.0.0.1 "POST /publicar HTTP/1.1" 500 -
+/Users/michaelsoares/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+[2026-05-10 01:28:48] Servidor em http://localhost:3000  |  POST /publicar  |  GET /status
+[2026-05-10 01:28:48] Servidor em http://localhost:3000  |  POST /publicar  |  GET /status
+[2026-05-10 01:28:49] === POST /publicar ===
+[2026-05-10 01:28:49] === POST /publicar ===
+[2026-05-10 01:28:49] Gerando slides...
+[2026-05-10 01:28:49] Gerando slides...
+[2026-05-10 01:28:50] Slides gerados.
+[2026-05-10 01:28:50] Slides gerados.
+[2026-05-10 01:28:50]   Enviando 01_capa.jpg → imgur
+[2026-05-10 01:28:50]   Enviando 01_capa.jpg → imgur
+[2026-05-10 01:28:51] ERRO: 503 Server Error: backend write error for url: https://api.imgur.com/3/image
+[2026-05-10 01:28:51] ERRO: 503 Server Error: backend write error for url: https://api.imgur.com/3/image
+[2026-05-10 01:28:51] 127.0.0.1 "POST /publicar HTTP/1.1" 500 -
+[2026-05-10 01:28:51] 127.0.0.1 "POST /publicar HTTP/1.1" 500 -
+/Users/michaelsoares/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+[2026-05-10 01:37:00] Servidor em http://localhost:3000  |  POST /publicar  |  GET /status
+[2026-05-10 01:37:00] Servidor em http://localhost:3000  |  POST /publicar  |  GET /status
+[2026-05-10 01:37:02] === POST /publicar ===
+[2026-05-10 01:37:02] === POST /publicar ===
+[2026-05-10 01:37:02] Gerando slides...
+[2026-05-10 01:37:02] Gerando slides...
+[2026-05-10 01:37:02] Slides gerados.
+[2026-05-10 01:37:02] Slides gerados.
+[2026-05-10 01:37:02]   Enviando 01_capa.jpg → imgbb
+[2026-05-10 01:37:02]   Enviando 01_capa.jpg → imgbb
+[2026-05-10 01:37:04]     ✓ https://i.ibb.co/JwmZPMLN/694e927b19e3.jpg
+[2026-05-10 01:37:04]     ✓ https://i.ibb.co/JwmZPMLN/694e927b19e3.jpg
+[2026-05-10 01:37:04]   Enviando 02_oque_e.jpg → imgbb
+[2026-05-10 01:37:04]   Enviando 02_oque_e.jpg → imgbb
+[2026-05-10 01:37:06]     ✓ https://i.ibb.co/MxQRFspR/d35825ca6960.jpg
+[2026-05-10 01:37:06]     ✓ https://i.ibb.co/MxQRFspR/d35825ca6960.jpg
+[2026-05-10 01:37:06]   Enviando 03_como_funciona.jpg → imgbb
+[2026-05-10 01:37:06]   Enviando 03_como_funciona.jpg → imgbb
+[2026-05-10 01:37:08]     ✓ https://i.ibb.co/JWjDY21G/bf1f586f000d.jpg
+[2026-05-10 01:37:08]     ✓ https://i.ibb.co/JWjDY21G/bf1f586f000d.jpg
+[2026-05-10 01:37:08]   Enviando 04_vantagens.jpg → imgbb
+[2026-05-10 01:37:08]   Enviando 04_vantagens.jpg → imgbb
+[2026-05-10 01:37:10]     ✓ https://i.ibb.co/HfNQwXG7/6ae3a37a79ef.jpg
+[2026-05-10 01:37:10]     ✓ https://i.ibb.co/HfNQwXG7/6ae3a37a79ef.jpg
+[2026-05-10 01:37:10]   Enviando 05_cta.jpg → imgbb
+[2026-05-10 01:37:10]   Enviando 05_cta.jpg → imgbb
+[2026-05-10 01:37:11]     ✓ https://i.ibb.co/0yGQ2N81/87603fbb8ba0.jpg
+[2026-05-10 01:37:11]     ✓ https://i.ibb.co/0yGQ2N81/87603fbb8ba0.jpg
+[2026-05-10 01:37:16]   Item criado: 18080434940443097
+[2026-05-10 01:37:16]   Item criado: 18080434940443097
+[2026-05-10 01:37:20]   Item criado: 18080434952443097
+[2026-05-10 01:37:20]   Item criado: 18080434952443097
+[2026-05-10 01:37:24]   Item criado: 18080434964443097
+[2026-05-10 01:37:24]   Item criado: 18080434964443097
+[2026-05-10 01:37:28]   Item criado: 18080434976443097
+[2026-05-10 01:37:28]   Item criado: 18080434976443097
+[2026-05-10 01:37:31]   Item criado: 18080434994443097
+[2026-05-10 01:37:31]   Item criado: 18080434994443097
+[2026-05-10 01:37:32]   [18080434] FINISHED (1)
+[2026-05-10 01:37:32]   [18080434] FINISHED (1)
+[2026-05-10 01:37:32]   [18080434] FINISHED (1)
+[2026-05-10 01:37:32]   [18080434] FINISHED (1)
+[2026-05-10 01:37:33]   [18080434] FINISHED (1)
+[2026-05-10 01:37:33]   [18080434] FINISHED (1)
+[2026-05-10 01:37:33]   [18080434] FINISHED (1)
+[2026-05-10 01:37:33]   [18080434] FINISHED (1)
+[2026-05-10 01:37:33]   [18080434] FINISHED (1)
+[2026-05-10 01:37:33]   [18080434] FINISHED (1)
+[2026-05-10 01:37:37]   Carrossel: 18080435015443097
+[2026-05-10 01:37:37]   Carrossel: 18080435015443097
+[2026-05-10 01:37:38]   [carrossel] FINISHED (1)
+[2026-05-10 01:37:38]   [carrossel] FINISHED (1)
+[2026-05-10 01:37:43] ✅ Post ID: 17879414931436716
+[2026-05-10 01:37:43] ✅ Post ID: 17879414931436716
+[2026-05-10 01:37:43] 127.0.0.1 "POST /publicar HTTP/1.1" 200 -
+[2026-05-10 01:37:43] 127.0.0.1 "POST /publicar HTTP/1.1" 200 -
+/Users/michaelsoares/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+[2026-05-10 08:58:35] Servidor em http://localhost:3000  |  POST /publicar  |  GET /status
+[2026-05-10 08:58:35] Servidor em http://localhost:3000  |  POST /publicar  |  GET /status
+[2026-05-10 09:02:55] === POST /publicar ===
+[2026-05-10 09:02:55] === POST /publicar ===
+[2026-05-10 09:02:55] Gerando slides...
+[2026-05-10 09:02:55] Gerando slides...
+[2026-05-10 09:02:55] Slides gerados.
+[2026-05-10 09:02:55] Slides gerados.
+[2026-05-10 09:02:55]   Enviando 01_capa.jpg → imgbb
+[2026-05-10 09:02:55]   Enviando 01_capa.jpg → imgbb
+[2026-05-10 09:02:57]     ✓ https://i.ibb.co/JwmZPMLN/694e927b19e3.jpg
+[2026-05-10 09:02:57]     ✓ https://i.ibb.co/JwmZPMLN/694e927b19e3.jpg
+[2026-05-10 09:02:57]   Enviando 02_oque_e.jpg → imgbb
+[2026-05-10 09:02:57]   Enviando 02_oque_e.jpg → imgbb
+[2026-05-10 09:02:59]     ✓ https://i.ibb.co/MxQRFspR/d35825ca6960.jpg
+[2026-05-10 09:02:59]     ✓ https://i.ibb.co/MxQRFspR/d35825ca6960.jpg
+[2026-05-10 09:02:59]   Enviando 03_como_funciona.jpg → imgbb
+[2026-05-10 09:02:59]   Enviando 03_como_funciona.jpg → imgbb
+[2026-05-10 09:03:00]     ✓ https://i.ibb.co/JWjDY21G/bf1f586f000d.jpg
+[2026-05-10 09:03:00]     ✓ https://i.ibb.co/JWjDY21G/bf1f586f000d.jpg
+[2026-05-10 09:03:00]   Enviando 04_vantagens.jpg → imgbb
+[2026-05-10 09:03:00]   Enviando 04_vantagens.jpg → imgbb
+[2026-05-10 09:03:02]     ✓ https://i.ibb.co/HfNQwXG7/6ae3a37a79ef.jpg
+[2026-05-10 09:03:02]     ✓ https://i.ibb.co/HfNQwXG7/6ae3a37a79ef.jpg
+[2026-05-10 09:03:02]   Enviando 05_cta.jpg → imgbb
+[2026-05-10 09:03:02]   Enviando 05_cta.jpg → imgbb
+[2026-05-10 09:03:04]     ✓ https://i.ibb.co/0yGQ2N81/87603fbb8ba0.jpg
+[2026-05-10 09:03:04]     ✓ https://i.ibb.co/0yGQ2N81/87603fbb8ba0.jpg
+[2026-05-10 09:03:09]   Item criado: 18080475134443097
+[2026-05-10 09:03:09]   Item criado: 18080475134443097
+[2026-05-10 09:03:13]   Item criado: 18080475146443097
+[2026-05-10 09:03:13]   Item criado: 18080475146443097
+[2026-05-10 09:03:19]   Item criado: 18080475161443097
+[2026-05-10 09:03:19]   Item criado: 18080475161443097
+[2026-05-10 09:03:25]   Item criado: 18080475179443097
+[2026-05-10 09:03:25]   Item criado: 18080475179443097
+[2026-05-10 09:03:29]   Item criado: 18080475197443097
+[2026-05-10 09:03:29]   Item criado: 18080475197443097
+[2026-05-10 09:03:30]   [18080475] FINISHED (1)
+[2026-05-10 09:03:30]   [18080475] FINISHED (1)
+[2026-05-10 09:03:30]   [18080475] FINISHED (1)
+[2026-05-10 09:03:30]   [18080475] FINISHED (1)
+[2026-05-10 09:03:31]   [18080475] FINISHED (1)
+[2026-05-10 09:03:31]   [18080475] FINISHED (1)
+[2026-05-10 09:03:31]   [18080475] FINISHED (1)
+[2026-05-10 09:03:31]   [18080475] FINISHED (1)
+[2026-05-10 09:03:32]   [18080475] FINISHED (1)
+[2026-05-10 09:03:32]   [18080475] FINISHED (1)
+[2026-05-10 09:03:36]   Carrossel: 18080475224443097
+[2026-05-10 09:03:36]   Carrossel: 18080475224443097
+[2026-05-10 09:03:37]   [carrossel] FINISHED (1)
+[2026-05-10 09:03:37]   [carrossel] FINISHED (1)
+[2026-05-10 09:03:41] ✅ Post ID: 18072119954309936
+[2026-05-10 09:03:41] ✅ Post ID: 18072119954309936
+[2026-05-10 09:03:41] 127.0.0.1 "POST /publicar HTTP/1.1" 200 -
+[2026-05-10 09:03:41] 127.0.0.1 "POST /publicar HTTP/1.1" 200 -
