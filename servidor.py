@@ -16,7 +16,7 @@ load_dotenv(Path(__file__).parent / ".env")
 PROJECT_DIR  = Path(__file__).parent
 SLIDES_DIR   = PROJECT_DIR / "slides"
 LOG_FILE     = PROJECT_DIR / "servidor.log"
-API_PORT     = 3000
+API_PORT = int(os.environ.get("PORT", 3000))
 
 ACCOUNT_ID      = os.getenv("INSTAGRAM_BUSINESS_ID")
 ACCESS_TOKEN    = os.getenv("INSTAGRAM_ACCESS_TOKEN")
