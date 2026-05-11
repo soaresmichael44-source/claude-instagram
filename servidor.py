@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Servidor local porta 3000.
-POST /publicar  → gera slides, faz upload para catbox.moe, publica carrossel no Instagram.
+POST /publicar  → gera slides, faz upload para Cloudinary, publica carrossel no Instagram.
 GET  /status    → saúde do servidor.
 """
 
@@ -9,6 +9,8 @@ import json, os, sys, time, threading, subprocess, http.server
 from pathlib import Path
 from datetime import datetime
 import requests
+import cloudinary
+import cloudinary.uploader
 from dotenv import load_dotenv
 
 load_dotenv(Path(__file__).parent / ".env")
@@ -21,9 +23,13 @@ API_PORT = int(os.environ.get("PORT", 3000))
 ACCOUNT_ID      = os.getenv("INSTAGRAM_BUSINESS_ID")
 ACCESS_TOKEN    = os.getenv("INSTAGRAM_ACCESS_TOKEN")
 API_VERSION     = os.getenv("META_API_VERSION", "v19.0")
-IMGUR_CLIENT_ID = os.getenv("IMGUR_CLIENT_ID")
-IMGBB_API_KEY   = os.getenv("IMGBB_API_KEY")
 GRAPH           = f"https://graph.facebook.com/{API_VERSION}"
+
+cloudinary.config(
+    cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.getenv("CLOUDINARY_API_KEY"),
+    api_secret=os.getenv("CLOUDINARY_API_SECRET"),
+)
 
 _lock = threading.Lock()
 
@@ -46,30 +52,14 @@ def log(msg):
         f.write(linha + "\n")
 
 
-def gerar_slides():
-    log("Gerando slides...")
-    r = subprocess.run([sys.executable, str(PROJECT_DIR / "gerar_carrossel.py")],
-                       capture_output=True, text=True, cwd=PROJECT_DIR)
-    if r.returncode != 0:
-        raise RuntimeError(r.stderr)
-    log("Slides gerados.")
-
-
-def upload_imgbb(path: Path) -> str:
-    log(f"  Enviando {path.name} → imgbb")
-    import base64
-    with open(path, "rb") as f:
-        b64 = base64.b64encode(f.read()).decode()
-    r = requests.post(
-        "https://api.imgbb.com/1/upload",
-        data={"key": IMGBB_API_KEY, "image": b64},
-        timeout=60,
+def upload_cloudinary(path: Path) -> str:
+    log(f"  Enviando {path.name} → Cloudinary")
+    result = cloudinary.uploader.upload(
+        str(path),
+        folder="instagram_carrossel",
+        resource_type="image",
     )
-    r.raise_for_status()
-    data = r.json()
-    if not data.get("success"):
-        raise RuntimeError(f"imgbb erro: {data}")
-    url = data["data"]["url"]
+    url = result["secure_url"]
     log(f"    ✓ {url}")
     return url
 
@@ -90,7 +80,6 @@ def aguardar(cid, label=""):
 
 
 def publicar_carrossel(urls: list, caption: str) -> str:
-    # Cria item por item
     children = []
     for url in urls:
         r = requests.post(f"{GRAPH}/{ACCOUNT_ID}/media",
@@ -104,7 +93,6 @@ def publicar_carrossel(urls: list, caption: str) -> str:
     for cid in children:
         aguardar(cid, cid[:8])
 
-    # Cria container do carrossel
     r = requests.post(f"{GRAPH}/{ACCOUNT_ID}/media",
                       params={"media_type": "CAROUSEL", "children": ",".join(children),
                               "caption": caption, "access_token": ACCESS_TOKEN})
@@ -113,7 +101,6 @@ def publicar_carrossel(urls: list, caption: str) -> str:
     log(f"  Carrossel: {carrossel_id}")
     aguardar(carrossel_id, "carrossel")
 
-    # Publica
     r = requests.post(f"{GRAPH}/{ACCOUNT_ID}/media_publish",
                       params={"creation_id": carrossel_id, "access_token": ACCESS_TOKEN})
     r.raise_for_status()
@@ -131,7 +118,7 @@ def pipeline(caption: str, dados: dict = None) -> dict:
     if r.returncode != 0:
         raise RuntimeError(r.stderr)
     arquivos = sorted(SLIDES_DIR.glob("*.jpg"))
-    urls = [upload_imgbb(p) for p in arquivos]
+    urls = [upload_cloudinary(p) for p in arquivos]
     post_id = publicar_carrossel(urls, caption)
     return {"status": "ok", "post_id": post_id, "image_urls": urls}
 
@@ -160,12 +147,13 @@ class Handler(http.server.BaseHTTPRequestHandler):
             return
 
         caption = CAPTION_PADRAO
+        dados = []
         n = int(self.headers.get("Content-Length", 0))
         if n:
             try:
                 body = json.loads(self.rfile.read(n))
                 caption = body.get("caption", CAPTION_PADRAO)
-                dados = body.get("dados", {})
+                dados = body.get("dados", [])
             except json.JSONDecodeError:
                 self._json(400, {"erro": "JSON inválido"})
                 return
