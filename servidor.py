@@ -59,7 +59,7 @@ def upload_cloudinary(path: Path) -> str:
         folder="instagram_carrossel",
         resource_type="image",
     )
-    url = result["secure_url"]
+    import urllib.parse; url = urllib.parse.unquote(result["secure_url"])
     log(f"    ✓ {url}")
     return url
 
