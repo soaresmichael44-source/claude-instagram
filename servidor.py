@@ -122,8 +122,14 @@ def publicar_carrossel(urls: list, caption: str) -> str:
     return post_id
 
 
-def pipeline(caption: str) -> dict:
-    gerar_slides()
+def pipeline(caption: str, dados: dict = None) -> dict:
+    import json as _json
+    dados_str = _json.dumps(dados or {})
+    import subprocess as _sp, sys as _sys
+    r = _sp.run([_sys.executable, str(PROJECT_DIR / "gerar_carrossel.py"), dados_str],
+                capture_output=True, text=True, cwd=PROJECT_DIR)
+    if r.returncode != 0:
+        raise RuntimeError(r.stderr)
     arquivos = sorted(SLIDES_DIR.glob("*.jpg"))
     urls = [upload_imgbb(p) for p in arquivos]
     post_id = publicar_carrossel(urls, caption)
@@ -157,7 +163,9 @@ class Handler(http.server.BaseHTTPRequestHandler):
         n = int(self.headers.get("Content-Length", 0))
         if n:
             try:
-                caption = json.loads(self.rfile.read(n)).get("caption", CAPTION_PADRAO)
+                body = json.loads(self.rfile.read(n))
+                caption = body.get("caption", CAPTION_PADRAO)
+                dados = body.get("dados", {})
             except json.JSONDecodeError:
                 self._json(400, {"erro": "JSON inválido"})
                 return
@@ -168,7 +176,7 @@ class Handler(http.server.BaseHTTPRequestHandler):
 
         try:
             log("=== POST /publicar ===")
-            self._json(200, pipeline(caption))
+            self._json(200, pipeline(caption, dados))
         except Exception as e:
             log(f"ERRO: {e}")
             self._json(500, {"erro": str(e)})
