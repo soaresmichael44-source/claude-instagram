@@ -58,7 +58,7 @@ def slide_capa(dados):
     img, draw = canvas()
     draw.ellipse([380, 280, 700, 600], fill=hex2rgb(BG3))
     draw.ellipse([390, 290, 690, 590], fill="#3d1e2a")
-    draw.ellipse([420, 310, 660, 520], fill=hex2rgb(ROSE)+"22")
+    draw.ellipse([420, 310, 660, 520], fill=(*hex2rgb(ROSE), 40))
     gold_line(draw, 380, 200)
     center(draw, dados.get("titulo",""), 430, 96, CREAM, bold=True)
     center(draw, dados.get("subtitulo",""), 580, 40, MUTED)
