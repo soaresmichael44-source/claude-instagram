@@ -83,7 +83,7 @@ def publicar_carrossel(urls: list, caption: str) -> str:
     children = []
     for url in urls:
         r = requests.post(f"{GRAPH}/{ACCOUNT_ID}/media",
-                          params={"image_url": url, "is_carousel_item": "true",
+                          data={"image_url": url, "is_carousel_item": "true",
                                   "access_token": ACCESS_TOKEN})
         r.raise_for_status()
         cid = r.json()["id"]
