@@ -176,7 +176,7 @@ class Handler(http.server.BaseHTTPRequestHandler):
 
         try:
             log("=== POST /publicar ===")
-            self._json(200, pipeline(caption, dados))
+            self._json(200, pipeline(caption, {"handle": "@usuario", "slides": dados}))
         except Exception as e:
             log(f"ERRO: {e}")
             self._json(500, {"erro": str(e)})
