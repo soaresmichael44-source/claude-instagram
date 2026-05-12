@@ -58,6 +58,8 @@ def upload_cloudinary(path: Path) -> str:
         str(path),
         folder="instagram_carrossel",
         resource_type="image",
+        api_key=os.getenv("CLOUDINARY_API_KEY"),
+        api_secret=os.getenv("CLOUDINARY_API_SECRET"),
     )
     url = result["secure_url"]
     log(f"    ✓ {url}")
