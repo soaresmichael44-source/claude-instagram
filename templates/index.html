@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Publicador Instagram</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,sans-serif;background:#0f0f0f;color:#e0e0e0;padding:20px;max-width:700px;margin:0 auto}
+h1{font-size:18px;margin-bottom:20px;color:#fff}
+label{font-size:11px;color:#888;display:block;margin-bottom:5px;text-transform:uppercase}
+textarea,input{width:100%;padding:10px;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#e0e0e0;font-size:14px;font-family:inherit;margin-bottom:12px}
+textarea{resize:vertical}
+.slide{background:#1a1a1a;border:1px solid #333;border-radius:8px;padding:12px;margin-bottom:10px}
+.sh{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.sh span{font-size:12px;color:#888}
+.rb{background:none;border:none;color:#888;cursor:pointer;font-size:20px}
+.add{width:100%;padding:10px;background:none;border:1px dashed #444;border-radius:8px;color:#888;cursor:pointer;margin:10px 0;font-size:14px}
+.pub{width:100%;padding:12px;background:linear-gradient(135deg,#C13584,#E1306C);color:white;border:none;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;margin-top:10px}
+.pub:disabled{opacity:.5}
+.st{margin-top:15px;padding:12px;border-radius:8px;font-size:14px;display:none}
+.ok{background:#0d2e1a;color:#4caf50;border:1px solid #1e5c32}
+.er{background:#2e0d0d;color:#f44336;border:1px solid #5c1e1e}
+</style>
+</head>
+<body>
+<h1>📸 Publicador Instagram</h1>
+<label>Legenda</label>
+<textarea id="cap" rows="4" placeholder="Legenda com hashtags..."></textarea>
+<label>Slides</label>
+<div id="slides"></div>
+<button class="add" onclick="addSlide('','')">+ Adicionar slide</button>
+<button class="pub" id="btn" onclick="pub()">Publicar no Instagram</button>
+<div class="st" id="st"></div>
+<script>
+let n=0;
+function addSlide(t,c){
+  n++;const id=n;
+  const d=document.createElement('div');
+  d.className='slide';d.id='sl'+id;
+  d.innerHTML=`<div class="sh"><span>Slide ${id}</span><button class="rb" onclick="document.getElementById('sl${id}').remove()">×</button></div><input type="text" id="t${id}" placeholder="Título" value="${t}"><textarea id="c${id}" rows="2" placeholder="Conteúdo">${c}</textarea>`;
+  document.getElementById('slides').appendChild(d);
+}
+function msg(m,tp){const e=document.getElementById('st');e.style.display='block';e.className='st '+tp;e.innerHTML=m;}
+async function pub(){
+  const cap=document.getElementById('cap').value.trim();
+  const slides=[];
+  for(let i=1;i<=n;i++){const t=document.getElementById('t'+i);const c=document.getElementById('c'+i);if(t&&c)slides.push({titulo:t.value.trim(),conteudo:c.value.trim()});}
+  if(!cap)return msg('Preencha a legenda.','er');
+  if(slides.length<2)return msg('Adicione pelo menos 2 slides.','er');
+  const btn=document.getElementById('btn');btn.disabled=true;btn.textContent='Publicando...';
+  msg('Gerando e enviando...','ok');
+  try{
+    const r=await fetch('/publicar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({caption:cap,dados:slides})});
+    const d=await r.json();
+    if(d.status==='ok'){msg('✅ Publicado! Post ID: <strong>'+d.post_id+'</strong>','ok');}
+    else{msg('❌ Erro: '+(d.erro||JSON.stringify(d)),'er');}
+  }catch(e){msg('❌ '+e.message,'er');}
+  btn.disabled=false;btn.textContent='Publicar no Instagram';
+}
+addSlide('','');addSlide('','');
+</script>
+</body>
+</html>
