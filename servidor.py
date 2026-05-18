@@ -1,29 +1,20 @@
-#!/usr/bin/env python3
-"""
-Servidor local porta 3000.
-POST /publicar  → gera slides, faz upload para Cloudinary, publica carrossel no Instagram.
-GET  /status    → saúde do servidor.
-"""
-
-import json, os, sys, time, threading, subprocess, http.server
+import os, time, tempfile
 from pathlib import Path
-from datetime import datetime
-import requests
-import cloudinary
-import cloudinary.uploader
+from flask import Flask, request, jsonify, render_template_string
+from flask_cors import CORS
+import cloudinary, cloudinary.uploader, requests
+from PIL import Image, ImageDraw, ImageFont
 from dotenv import load_dotenv
 
 load_dotenv(Path(__file__).parent / ".env")
 
-PROJECT_DIR  = Path(__file__).parent
-SLIDES_DIR   = PROJECT_DIR / "slides"
-LOG_FILE     = PROJECT_DIR / "servidor.log"
-API_PORT = int(os.environ.get("PORT", 3000))
+app = Flask(__name__)
+CORS(app)
 
-ACCOUNT_ID      = os.getenv("INSTAGRAM_BUSINESS_ID")
-ACCESS_TOKEN    = os.getenv("INSTAGRAM_ACCESS_TOKEN")
-API_VERSION     = os.getenv("META_API_VERSION", "v19.0")
-GRAPH           = f"https://graph.facebook.com/{API_VERSION}"
+ACCOUNT_ID = os.getenv("INSTAGRAM_BUSINESS_ID")
+ACCESS_TOKEN = os.getenv("INSTAGRAM_ACCESS_TOKEN")
+API_VERSION = os.getenv("META_API_VERSION", "v19.0")
+GRAPH = f"https://graph.facebook.com/{API_VERSION}"
 
 cloudinary.config(
     cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
@@ -31,160 +22,69 @@ cloudinary.config(
     api_secret=os.getenv("CLOUDINARY_API_SECRET"),
 )
 
-_lock = threading.Lock()
+HTML = """<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Publicador Instagram</title><style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:-apple-system,sans-serif;background:#0f0f0f;color:#e0e0e0;padding:20px;max-width:700px;margin:0 auto}h1{font-size:18px;margin-bottom:20px}label{font-size:11px;color:#888;display:block;margin-bottom:5px;text-transform:uppercase}textarea,input{width:100%;padding:10px;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#e0e0e0;font-size:14px;font-family:inherit;margin-bottom:12px}textarea{resize:vertical}.slide{background:#1a1a1a;border:1px solid #333;border-radius:8px;padding:12px;margin-bottom:10px}.sh{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}.sh span{font-size:12px;color:#888}.rb{background:none;border:none;color:#888;cursor:pointer;font-size:20px}.add{width:100%;padding:10px;background:none;border:1px dashed #444;border-radius:8px;color:#888;cursor:pointer;margin:10px 0;font-size:14px}.pub{width:100%;padding:12px;background:linear-gradient(135deg,#C13584,#E1306C);color:white;border:none;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;margin-top:10px}.pub:disabled{opacity:.5}.st{margin-top:15px;padding:12px;border-radius:8px;font-size:14px;display:none}.ok{background:#0d2e1a;color:#4caf50;border:1px solid #1e5c32}.er{background:#2e0d0d;color:#f44336;border:1px solid #5c1e1e}</style></head><body><h1>Publicador Instagram</h1><label>Legenda</label><textarea id="cap" rows="4" placeholder="Legenda com hashtags..."></textarea><label>Slides</label><div id="slides"></div><button class="add" onclick="addSlide('','')">+ Adicionar slide</button><button class="pub" id="btn" onclick="pub()">Publicar no Instagram</button><div class="st" id="st"></div><script>let n=0;function addSlide(t,c){n++;const id=n;const d=document.createElement('div');d.className='slide';d.id='sl'+id;d.innerHTML=`<div class="sh"><span>Slide ${id}</span><button class="rb" onclick="document.getElementById('sl${id}').remove()">x</button></div><input type="text" id="t${id}" placeholder="Titulo" value="${t}"><textarea id="c${id}" rows="2" placeholder="Conteudo">${c}</textarea>`;document.getElementById('slides').appendChild(d);}function msg(m,tp){const e=document.getElementById('st');e.style.display='block';e.className='st '+tp;e.innerHTML=m;}async function pub(){const cap=document.getElementById('cap').value.trim();const slides=[];for(let i=1;i<=n;i++){const t=document.getElementById('t'+i);const c=document.getElementById('c'+i);if(t&&c)slides.push({titulo:t.value.trim(),conteudo:c.value.trim()});}if(!cap)return msg('Preencha a legenda.','er');if(slides.length<2)return msg('Adicione pelo menos 2 slides.','er');const btn=document.getElementById('btn');btn.disabled=true;btn.textContent='Publicando...';msg('Gerando e enviando...','ok');try{const r=await fetch('/publicar',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({caption:cap,dados:slides})});const d=await r.json();if(d.status==='ok'){msg('Publicado! Post ID: '+d.post_id,'ok');}else{msg('Erro: '+(d.erro||JSON.stringify(d)),'er');}}catch(e){msg('Erro: '+e.message,'er');}btn.disabled=false;btn.textContent='Publicar no Instagram';}addSlide('','');addSlide('','');</script></body></html>"""
 
-CAPTION_PADRAO = """🏠 Consórcio: o jeito inteligente de realizar seus sonhos!
+def gerar_slide(titulo, conteudo, index):
+    W, H = 1080, 1080
+    img = Image.new("RGB", (W, H))
+    draw = ImageDraw.Draw(img)
+    for y in range(H):
+        r = int(220-(y/H)*60); g = int(180-(y/H)*80); b = int(190-(y/H)*60)
+        draw.line([(0,y),(W,y)], fill=(r,g,b))
+    draw.rectangle([20,20,W-20,H-20], outline="#D4AF37", width=4)
+    try:
+        ft = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 60)
+        fb = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 38)
+    except:
+        ft = fb = ImageFont.load_default()
+    draw.text((W//2, 280), titulo, font=ft, fill="#D4AF37", anchor="mm")
+    words = conteudo.split()
+    lines, line = [], ""
+    for w in words:
+        if len(line+w) < 32: line += w+" "
+        else: lines.append(line.strip()); line = w+" "
+    lines.append(line.strip())
+    y = 460
+    for l in lines:
+        draw.text((W//2, y), l, font=fb, fill="white", anchor="mm"); y += 62
+    tmp = tempfile.NamedTemporaryFile(suffix=".jpg", delete=False)
+    img.save(tmp.name, "JPEG", quality=95)
+    return tmp.name
 
-✅ Sem juros
-✅ Parcelas acessíveis
-✅ Pode usar FGTS
-✅ Carta de crédito = poder de compra à vista
+def upload(path):
+    r = cloudinary.uploader.upload(path, folder="instagram_carrossel", resource_type="image",
+        api_key=os.getenv("CLOUDINARY_API_KEY"), api_secret=os.getenv("CLOUDINARY_API_SECRET"))
+    return r["secure_url"]
 
-Me chame no Direct e vamos encontrar o consórcio ideal para você! 👇
+def aguardar(cid):
+    for _ in range(15):
+        r = requests.get(f"{GRAPH}/{cid}", params={"fields":"status_code","access_token":ACCESS_TOKEN})
+        if r.json().get("status_code") == "FINISHED": return
+        time.sleep(2)
 
-#consórcio #consorcioilumine #realizeseusonho #imóveis #automóvel #planejamentofinanceiro #investimento #michaelsoares #finançaspessoais"""
+@app.route("/")
+def index():
+    return HTML
 
-
-def log(msg):
-    linha = f"[{datetime.now().strftime('%Y-%m-%d %H:%M:%S')}] {msg}"
-    print(linha, flush=True)
-    with open(LOG_FILE, "a") as f:
-        f.write(linha + "\n")
-
-
-def upload_cloudinary(path: Path) -> str:
-    log(f"  Enviando {path.name} → Cloudinary")
-    result = cloudinary.uploader.upload(
-        str(path),
-        folder="instagram_carrossel",
-        resource_type="image",
-        api_key=os.getenv("CLOUDINARY_API_KEY"),
-        api_secret=os.getenv("CLOUDINARY_API_SECRET"),
-    )
-    url = result["secure_url"]
-    log(f"    ✓ {url}")
-    return url
-
-
-def aguardar(cid, label=""):
-    for i in range(15):
-        r = requests.get(f"{GRAPH}/{cid}",
-                         params={"fields": "status_code", "access_token": ACCESS_TOKEN})
-        r.raise_for_status()
-        status = r.json().get("status_code", "?")
-        log(f"  [{label}] {status} ({i+1})")
-        if status == "FINISHED":
-            return
-        if status == "ERROR":
-            raise RuntimeError(f"Container {cid} em ERROR")
-        time.sleep(5)
-    raise TimeoutError(cid)
-
-
-def publicar_carrossel(urls: list, caption: str) -> str:
-    children = []
+@app.route("/publicar", methods=["POST"])
+def publicar():
+    data = request.get_json()
+    caption = data.get("caption","")
+    slides = data.get("dados",[])
+    urls = []
+    for i, s in enumerate(slides):
+        path = gerar_slide(s.get("titulo",""), s.get("conteudo",""), i)
+        url = upload(path); os.unlink(path); urls.append(url)
+    cids = []
     for url in urls:
-        r = requests.post(f"{GRAPH}/{ACCOUNT_ID}/media",
-                          data={"image_url": url, "is_carousel_item": "true",
-                                  "access_token": ACCESS_TOKEN})
-        r.raise_for_status()
-        cid = r.json()["id"]
-        log(f"  Item criado: {cid}")
-        children.append(cid)
-
-    for cid in children:
-        aguardar(cid, cid[:8])
-
-    r = requests.post(f"{GRAPH}/{ACCOUNT_ID}/media",
-                      params={"media_type": "CAROUSEL", "children": ",".join(children),
-                              "caption": caption, "access_token": ACCESS_TOKEN})
-    r.raise_for_status()
-    carrossel_id = r.json()["id"]
-    log(f"  Carrossel: {carrossel_id}")
-    aguardar(carrossel_id, "carrossel")
-
-    r = requests.post(f"{GRAPH}/{ACCOUNT_ID}/media_publish",
-                      params={"creation_id": carrossel_id, "access_token": ACCESS_TOKEN})
-    r.raise_for_status()
-    post_id = r.json()["id"]
-    log(f"✅ Post ID: {post_id}")
-    return post_id
-
-
-def pipeline(caption: str, dados: dict = None) -> dict:
-    import json as _json
-    dados_str = _json.dumps(dados or {})
-    import subprocess as _sp, sys as _sys
-    r = _sp.run([_sys.executable, str(PROJECT_DIR / "gerar_carrossel.py"), dados_str],
-                capture_output=True, text=True, cwd=PROJECT_DIR)
-    if r.returncode != 0:
-        raise RuntimeError(r.stderr)
-    arquivos = sorted(SLIDES_DIR.glob("*.jpg"))
-    urls = [upload_cloudinary(p) for p in arquivos]
-    post_id = publicar_carrossel(urls, caption)
-    return {"status": "ok", "post_id": post_id, "image_urls": urls}
-
-
-class Handler(http.server.BaseHTTPRequestHandler):
-    def log_message(self, fmt, *args):
-        log(f"{self.client_address[0]} {fmt % args}")
-
-    def do_OPTIONS(self):
-        self.send_response(200)
-        self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Access-Control-Allow-Methods", "POST, GET, OPTIONS")
-        self.send_header("Access-Control-Allow-Headers", "Content-Type")
-        self.end_headers()
-
-    def _json(self, code, data):
-        body = json.dumps(data, ensure_ascii=False, indent=2).encode()
-        self.send_response(code)
-        self.send_header("Access-Control-Allow-Origin", "*")
-        self.send_header("Content-Type", "application/json; charset=utf-8")
-        self.send_header("Content-Length", len(body))
-        self.end_headers()
-        self.wfile.write(body)
-
-    def do_GET(self):
-        if self.path == "/status":
-            self._json(200, {"status": "online", "porta": API_PORT, "conta": ACCOUNT_ID})
-        else:
-            self._json(404, {"erro": "não encontrado"})
-
-    def do_POST(self):
-        if self.path != "/publicar":
-            self._json(404, {"erro": "não encontrado"})
-            return
-
-        caption = CAPTION_PADRAO
-        dados = []
-        n = int(self.headers.get("Content-Length", 0))
-        if n:
-            try:
-                body = json.loads(self.rfile.read(n))
-                caption = body.get("caption", CAPTION_PADRAO)
-                dados = body.get("dados", [])
-            except json.JSONDecodeError:
-                self._json(400, {"erro": "JSON inválido"})
-                return
-
-        if not _lock.acquire(blocking=False):
-            self._json(409, {"erro": "publicação em andamento"})
-            return
-
-        try:
-            log("=== POST /publicar ===")
-            self._json(200, pipeline(caption, {"handle": "@usuario", "slides": dados}))
-        except Exception as e:
-            log(f"ERRO: {e}")
-            self._json(500, {"erro": str(e)})
-        finally:
-            _lock.release()
-
+        r = requests.post(f"{GRAPH}/{ACCOUNT_ID}/media", data={"image_url":url,"is_carousel_item":"true","access_token":ACCESS_TOKEN})
+        cids.append(r.json()["id"])
+    for cid in cids: aguardar(cid)
+    r = requests.post(f"{GRAPH}/{ACCOUNT_ID}/media", data={"media_type":"CAROUSEL","children":",".join(cids),"caption":caption,"access_token":ACCESS_TOKEN})
+    carousel_id = r.json()["id"]
+    r2 = requests.post(f"{GRAPH}/{ACCOUNT_ID}/media_publish", data={"creation_id":carousel_id,"access_token":ACCESS_TOKEN})
+    return jsonify({"status":"ok","post_id":r2.json().get("id"),"image_urls":urls})
 
 if __name__ == "__main__":
-    if not ACCOUNT_ID or not ACCESS_TOKEN:
-        sys.exit("Erro: INSTAGRAM_BUSINESS_ID e INSTAGRAM_ACCESS_TOKEN não definidos no .env")
-    server = http.server.HTTPServer(("0.0.0.0", API_PORT), Handler)
-    log(f"Servidor em http://localhost:{API_PORT}  |  POST /publicar  |  GET /status")
-    server.serve_forever()
+    port = int(os.environ.get("PORT", 8080))
+    app.run(host="0.0.0.0", port=port)
